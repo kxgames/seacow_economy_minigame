@@ -2,17 +2,17 @@
 Economy Minigame
 ===============================
 
-.. image:: https://img.shields.io/pypi/v/economy_minigame.svg
-   :target: https://pypi.python.org/pypi/economy_minigame
+.. image:: https://img.shields.io/pypi/v/seacow_economy_minigame.svg
+   :target: https://pypi.python.org/pypi/seacow_economy_minigame
 
-.. image:: https://img.shields.io/pypi/pyversions/economy_minigame.svg
-   :target: https://pypi.python.org/pypi/economy_minigame
+.. image:: https://img.shields.io/pypi/pyversions/seacow_economy_minigame.svg
+   :target: https://pypi.python.org/pypi/seacow_economy_minigame
 
-.. image:: https://img.shields.io/travis/kalekundert/economy_minigame.svg
-   :target: https://travis-ci.org/kalekundert/economy_minigame
+.. image:: https://img.shields.io/travis/kxgames/seacow_economy_minigame.svg
+   :target: https://travis-ci.org/kxgames/seacow_economy_minigame
 
-.. image:: https://img.shields.io/coveralls/kalekundert/economy_minigame.svg
-   :target: https://coveralls.io/github/kalekundert/economy_minigame?branch=master
+.. image:: https://img.shields.io/coveralls/kxgames/seacow_economy_minigame.svg
+   :target: https://coveralls.io/github/kxgames/seacow_economy_minigame?branch=master
 
 Installation
 ============

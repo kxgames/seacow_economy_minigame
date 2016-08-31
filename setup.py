@@ -26,7 +26,7 @@ setup(
     author=__author__,
     author_email=__email__,
     long_description=readme,
-    url='https://github.com/kalekundert/economy_minigame',
+    url='https://github.com/kxgames/seacow_economy_minigame',
     packages=[
         'src',
     ],
