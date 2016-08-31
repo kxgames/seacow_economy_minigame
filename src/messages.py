@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import networkx
+import kxg
+
+from .world import *
 
 class SetupWorld(kxg.Message):
 
@@ -28,7 +30,7 @@ class SetupWorld(kxg.Message):
         tree.add_industry_group(['lumber', 'stone'], 10)
 
     def setup_investment_tree(self):
-        self.investment_tree = tree = InvestmentTree()
+        self.investment_tree = tree = InvestmentTree(self.industry_tree)
 
         tree.add_investment('grains', 'small grain farm', 100, add=1)
         tree.add_investment('grains', 'large grain farm', 500, add=10)
@@ -63,11 +65,15 @@ class SetupWorld(kxg.Message):
     def tokens_to_add(self):
         yield self.industry_tree
         yield self.investment_tree
+        yield from self.industry_tree.groups
         yield from self.industry_tree.all_industries
-        yield from self.investment_tree.all_industries
+        yield from self.investment_tree.all_investments
+
+    def on_check(self, world):
+        pass
 
     def on_execute(self, world):
-        world.industry_tree = self.industry_table
+        world.industry_tree = self.industry_tree
         world.investment_tree = self.investment_tree
 
 
@@ -75,11 +81,14 @@ class SetupPlayer(kxg.Message):
 
     def __init__(self, player):
         self.player = player
-        self.player.cities = [City()]
+        self.player.cities = [City(self.player)]
 
     def tokens_to_add(self):
         yield self.player
         yield from self.player.cities
+
+    def on_check(self, world):
+        pass
 
     def on_execute(self, world):
         world.players.append(self.player)

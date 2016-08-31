@@ -2,5 +2,10 @@
 
 import kxg
 
+from .messages import SetupWorld
+
 class Referee(kxg.Referee):
-    pass
+
+    def on_start_game(self, num_players):
+        self >> SetupWorld()
+

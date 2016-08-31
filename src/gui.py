@@ -3,6 +3,9 @@
 import kxg
 import pyglet
 
+from .world import Player
+from .messages import SetupPlayer
+
 class Gui:
 
     def __init__(self):
@@ -19,10 +22,14 @@ class GuiActor(kxg.Actor):
 
     def __init__(self):
         super().__init__()
+        self.player = Player()
 
     def on_setup_gui(self, gui):
         self.gui = gui
         self.gui.window.set_handlers(self)
+
+    def on_start_game(self, num_players):
+        self >> SetupPlayer(self.player)
 
     def on_draw(self):
         self.gui.on_refresh_gui()
