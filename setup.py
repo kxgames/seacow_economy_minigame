@@ -14,6 +14,8 @@ with open('README.rst') as readme_file:
 
 requirements = [
         'kxg',
+        'networkx',
+        'glooey',
 ]
 
 test_requirements = [
