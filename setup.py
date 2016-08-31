@@ -6,7 +6,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-with open('economy_minigame/metadata.py') as metadata_file:
+with open('src/metadata.py') as metadata_file:
     exec(metadata_file.read())
 
 with open('README.rst') as readme_file:
@@ -28,11 +28,11 @@ setup(
     long_description=readme,
     url='https://github.com/kalekundert/economy_minigame',
     packages=[
-        'economy_minigame',
+        'src',
     ],
     entry_points = {
         'console_scripts': [
-            'economy_minigame=economy_minigame:main',
+            'economy_minigame=src:main',
         ],
     },
     include_package_data=True,
