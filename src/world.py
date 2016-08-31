@@ -34,6 +34,8 @@ class Player(kxg.Token):
             for industry in self.world.industries:
                 self.wealth_per_sec += city.calculate_profit(industry)
 
+        self.wealth += self.wealth_per_sec * dt
+
 
 class City(kxg.Token):
 
