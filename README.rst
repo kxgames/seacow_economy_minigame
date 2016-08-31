@@ -17,12 +17,12 @@ each other as directly as possible.
 Installation
 ============
 The basic step to install the minigame are to clone the repository, create a 
-``python3.5`` virtual environment, and to build the game using ``pip`` in 
+``python3`` virtual environment, and to build the game using ``pip`` in 
 editable mode::
 
    $ git clone https://github.com/kxgames/seacow_economy_minigame
    $ cd seacow_economy_minigame
-   $ virtualenv -p python3.5 --system-site-packages env
+   $ virtualenv -p python3 --system-site-packages env
    $ pip install -e .
 
 The game must be installed in a virtual environment to avoid name conflicts 
