@@ -6,6 +6,7 @@ import networkx as nx
 class World(kxg.World):
 
     def __init__(self):
+        super().__init__()
         self.players = []
         self.industry_tree = None
         self.investment_tree = None
