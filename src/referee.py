@@ -2,5 +2,5 @@
 
 import kxg
 
-class Referee (kxg.Referee):
+class Referee(kxg.Referee):
     pass

@@ -15,7 +15,7 @@ class Gui:
         self.batch.draw()
 
 
-class GuiActor (kxg.Actor):
+class GuiActor(kxg.Actor):
 
     def __init__(self):
         super().__init__()
