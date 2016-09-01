@@ -4,7 +4,7 @@ import kxg
 import pyglet
 
 from .world import Player
-from .messages import SetupPlayer
+from .messages import SetupPlayer, MakeInvestment
 
 class Gui:
 
@@ -44,15 +44,25 @@ class GuiActor(kxg.Actor):
         self.gui = gui
         self.gui.window.set_handlers(self)
 
+        self.supply_label = self.gui.create_text('', 20, 280)
+        self.demand_label = self.gui.create_text('', 20, 220)
+        self.price_label = self.gui.create_text('',  20, 160)
         self.wealth_label = self.gui.create_text('', 20, 80)
         self.income_label = self.gui.create_text('', 20, 20)
 
     def on_start_game(self, num_players):
         self >> SetupPlayer(self.player)
+        self >> MakeInvestment(self.player.cities[0],
+                self.world.investment_tree['small grain farm'])
 
     def on_draw(self):
+        grains = self.world.industry_tree['grains']
         self.wealth_label.text = '${:.0f}'.format(self.player.wealth)
         self.income_label.text = '${:.0f}/sec'.format(self.player.wealth_per_sec)
+        self.supply_label.text = 'Supply (grains): {:.0f}/sec'.format(self.player.cities[0].calculate_supply(grains))
+        self.demand_label.text = 'Demand (grains): {:.0f}/sec'.format(grains.calculate_demand())
+        self.price_label.text = 'Price (grains): ${:.0f}'.format(grains.calculate_price())
+
         self.gui.on_refresh_gui()
 
 

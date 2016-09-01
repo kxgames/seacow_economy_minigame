@@ -100,9 +100,9 @@ class MakeInvestment(kxg.Message):
         self.city = city
         self.investment = investment
 
-    def on_check(self):
+    def on_check(self, world):
         pass
 
-    def on_execute(self):
-        self.city.investments.append(investment)
+    def on_execute(self, world):
+        self.city.investments.append(self.investment)
 

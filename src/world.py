@@ -30,10 +30,10 @@ class Player(kxg.Token):
         self.wealth_per_sec = 0
 
     def on_update_game(self, dt):
-        for city in self.cities:
-            for industry in self.world.industries:
-                self.wealth_per_sec += city.calculate_profit(industry)
-
+        self.wealth_per_sec = sum((
+            city.calculate_profit(industry)
+            for city in self.cities
+            for industry in self.world.industries))
         self.wealth += self.wealth_per_sec * dt
 
 
@@ -45,6 +45,7 @@ class City(kxg.Token):
         self.available_industries = []
         self.investments = []
 
+    @kxg.read_only
     def calculate_supply(self, industry):
         # This function will be called many, many times each time the profits 
         # from each industry need to be worked out.  If this becomes a problem, 
@@ -54,9 +55,12 @@ class City(kxg.Token):
                 if invst.industry == industry
         ]
         supply_capacity = sum(x.supply_addend for x in relevant_investments)
-        supply_efficiency = sum(x.supply_multiplier for x in relevant_investments)
+        supply_efficiency = 1 + sum(x.supply_multiplier for x in relevant_investments)
+        if industry.name == 'grains':
+            print(supply_capacity, supply_efficiency)
         return supply_capacity * supply_efficiency
 
+    @kxg.read_only
     def calculate_profit(self, industry):
         return self.calculate_supply(industry) * industry.calculate_price()
 
@@ -69,6 +73,7 @@ class Industry(kxg.Token):
         self.base_demand = base_demand
         self.base_price = base_price
 
+    @kxg.read_only
     def calculate_demand(self):
         # Currently the demand doesn't change, but in the future it should 
         # account for investments made in other industries, technologies 
@@ -76,6 +81,7 @@ class Industry(kxg.Token):
         # other things in that vein.
         return self.base_demand
 
+    @kxg.read_only
     def calculate_price(self):
         global_supply = sum(x.calculate_supply(self) for x in self.world.cities)
         if global_supply == 0: return 0
@@ -133,12 +139,17 @@ class Investment(kxg.Token):
     technologies.
     """
 
-    def __init__(self, industry, name, cost, supply_addend, supply_multiplier=0):
+    def __init__(self, name, industry, cost, supply_addend, supply_multiplier=0):
         super().__init__()
         self.name = name
         self.industry = industry
+        self.cost = cost
         self.supply_addend = supply_addend
         self.supply_multiplier = supply_multiplier
+
+    def __repr__(self):
+        return 'Investment( name=\'{}\', cost={}, add={}, mul={})'.format(
+                self.name, self.cost, self.supply_addend, self.supply_multiplier)
 
 
 class InvestmentTree(kxg.Token):
@@ -149,6 +160,9 @@ class InvestmentTree(kxg.Token):
         self.table = {}
         self.graph = networkx.Graph()
      
+    def __getitem__(self, name):
+        return self.table[name]
+
     @property
     def all_investments(self):
         return self.table.values()
