@@ -16,13 +16,13 @@ class SetupWorld(kxg.Message):
     def setup_industry_tree(self):
         self.industry_tree = tree = IndustryTree()
 
-        tree.add_industry('grains', 20, 1)
-        tree.add_industry('fruits', 20, 1)
-        tree.add_industry('livestock', 20, 1)
-        tree.add_industry('stone', 20, 1)
-        tree.add_industry('lumber', 20, 1)
-        tree.add_industry('paper', 20, 1)
-        tree.add_industry('iron', 20, 1)
+        tree.add_industry('grains', 20, 10, 0.1)
+        tree.add_industry('fruits', 20, 10, 0.1)
+        tree.add_industry('livestock', 20, 10, 0.1)
+        tree.add_industry('stone', 20, 10, 0.1)
+        tree.add_industry('lumber', 20, 10, 0.1)
+        tree.add_industry('paper', 20, 10, 0.1)
+        tree.add_industry('iron', 20, 10, 0.1)
 
         tree.add_industry_edge('lumber', 'paper')
 

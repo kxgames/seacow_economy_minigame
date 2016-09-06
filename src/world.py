@@ -56,8 +56,6 @@ class City(kxg.Token):
         ]
         supply_capacity = sum(x.supply_addend for x in relevant_investments)
         supply_efficiency = 1 + sum(x.supply_multiplier for x in relevant_investments)
-        if industry.name == 'grains':
-            print(supply_capacity, supply_efficiency)
         return supply_capacity * supply_efficiency
 
     @kxg.read_only
@@ -67,11 +65,12 @@ class City(kxg.Token):
 
 class Industry(kxg.Token):
 
-    def __init__(self, name, base_demand, base_price):
+    def __init__(self, name, base_demand, max_price, min_price):
         super().__init__()
         self.name = name
-        self.base_demand = base_demand
-        self.base_price = base_price
+        self.base_demand = base_demand  # widgets/sec
+        self.max_price = max_price      # dollars
+        self.min_price = min_price      # dollars
 
     @kxg.read_only
     def calculate_demand(self):
@@ -83,10 +82,12 @@ class Industry(kxg.Token):
 
     @kxg.read_only
     def calculate_price(self):
-        global_supply = sum(x.calculate_supply(self) for x in self.world.cities)
-        if global_supply == 0: return 0
-        return self.base_price * self.calculate_demand() / global_supply
-
+        return inverse_price_algorithm(
+                sum(x.calculate_supply(self) for x in self.world.cities),
+                self.calculate_demand(),
+                self.max_price,
+                self.min_price,
+        )
 
 class IndustryGroup(kxg.Token):
     
@@ -111,9 +112,9 @@ class IndustryTree(kxg.Token):
     def all_industries(self):
         return self.table.values()
 
-    def add_industry(self, name, base_demand, base_price):
+    def add_industry(self, name, base_demand, max_price, min_price):
         assert not self.world, "the industry tree should not change during the game"
-        self.table[name] = Industry(name, base_demand, base_price)
+        self.table[name] = Industry(name, base_demand, max_price, min_price)
         self.graph.add_node(name)
 
     def add_industry_edge(self, upstream_name, downstream_name):
@@ -180,3 +181,28 @@ class InvestmentTree(kxg.Token):
         assert not self.world, "the investment tree should not change during the game"
         self.graph.add_edge(upstream_name, downstream_name)
 
+
+
+def inverse_price_algorithm(supply, demand, max_price, min_price):
+    """
+    Calculate the price of an industry's goods.  The relationship between 
+    supply and price is broadly inverse (i.e. 1/x).  This allows price to 
+    decrease as supply increases, but in a way that increasing supply will 
+    always increase the ultimate profit (i.e. price × supply) by some amount.
+
+    I wrote this function to overcome a shortcoming in the linear price 
+    algorithm (i.e. price = demand / supply), which is that any change in 
+    supply or demand is exactly offset by a change in price.  This makes it 
+    impossible to increase revenue.  
+    
+    Solving this problem required making the price algorithm non-linear, but 
+    there are many to do that.  I like this algorithm because its flexible and 
+    the meanings of its parameters are relatively easy to understand.  I tried 
+    making the profit curve a logistic function, but it lacked the flexibility 
+    of having a (slowly) increasing asymptote.  I also tried making the price 
+    curve an exponential decay, but this led to an undesirable peak in the 
+    profit curve.
+    """
+    a, b = max_price - min_price, min_price
+    mx = supply / demand
+    return a / (mx + 1) + b

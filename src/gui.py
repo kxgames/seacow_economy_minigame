@@ -53,7 +53,7 @@ class GuiActor(kxg.Actor):
     def on_start_game(self, num_players):
         self >> SetupPlayer(self.player)
         self >> MakeInvestment(self.player.cities[0],
-                self.world.investment_tree['small grain farm'])
+                self.world.investment_tree['large grain farm'])
 
     def on_draw(self):
         grains = self.world.industry_tree['grains']
